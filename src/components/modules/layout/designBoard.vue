@@ -38,7 +38,9 @@
             'layer-active': getIsActive(layer.uuid),
             'layer-hover': layer.uuid === dHoverUuid || dActiveElement.parent === layer.uuid,
           }" -->
-        <component :is="layer.type" v-for="layer in getlayers()" :id="layer.uuid" :key="layer.uuid" :class="['layer', { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement.parent === layer.uuid, 'layer-no-hover': dActiveElement.uuid === layer.uuid }]" :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid">
+        <component :is="layer.type" v-for="layer in getlayers()" :id="layer.uuid" :key="layer.uuid" 
+          :class="['layer', { 'layer-hover': layer.uuid === dHoverUuid || dActiveElement.parent === layer.uuid, 'layer-no-hover': dActiveElement.uuid === layer.uuid }]" 
+          :data-title="layer.type" :params="layer" :parent="dPage" :data-type="layer.type" :data-uuid="layer.uuid">
           <template v-if="layer.isContainer">
             <!-- :class="{
                 layer: true,
@@ -46,7 +48,9 @@
                 'layer-no-hover': dActiveElement.uuid !== widget.parent && dActiveElement.parent !== widget.parent,
                 'layer-hover': widget.uuid === dHoverUuid,
               }" -->
-            <component :is="widget.type" v-for="widget in getChilds(layer.uuid)" :key="widget.uuid" child :class="['layer', { 'layer-no-hover': dActiveElement.uuid !== widget.parent && dActiveElement.parent !== widget.parent }]" :data-title="widget.type" :params="widget" :parent="layer" :data-type="widget.type" :data-uuid="widget.uuid" />
+            <component :is="widget.type" v-for="widget in getChilds(layer.uuid)" :key="widget.uuid" child 
+              :class="['layer', { 'layer-no-hover': dActiveElement.uuid !== widget.parent && dActiveElement.parent !== widget.parent }]" 
+              :data-title="widget.type" :params="widget" :parent="layer" :data-type="widget.type" :data-uuid="widget.uuid" />
           </template>
         </component>
 
