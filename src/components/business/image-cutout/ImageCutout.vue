@@ -3,7 +3,7 @@
  * @Date: 2023-07-11 23:50:22
  * @Description: 抠图组件
  * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-14 09:10:31
+ * @LastEditTime: 2023-07-24 13:01:03
 -->
 <template>
   <el-dialog v-model="show" title="AI抠图（测试版）" width="650" @close="handleClose">
