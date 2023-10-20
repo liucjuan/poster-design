@@ -1,9 +1,9 @@
 /*
  * @Author: ShawnPhang
  * @Date: 2020-07-22 20:13:14
- * @Description:  
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-06 16:00:09
+ * @Description: 接口名称
+ * @LastEditors: ShawnPhang <site: m.palxp.cn>
+ * @LastEditTime: 2023-07-27 17:51:53
  */
 let path = '/api';
 

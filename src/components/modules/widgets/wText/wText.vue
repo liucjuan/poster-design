@@ -53,7 +53,7 @@
 const NAME = 'w-text'
 
 import { mapGetters, mapActions } from 'vuex'
-// import api from '@/api'
+import { fontWithDraw } from '@/utils/widgets/loadFontRule'
 
 export default {
   name: NAME,
@@ -70,10 +70,10 @@ export default {
     fontSize: 24,
     zoom: 1,
     fontClass: {
-      alias: '素材集市酷方体',
-      id: 33925853,
-      value: 'sucaijishikufangti',
-      url: 'https://res.palxp.com/static/fonts/20200809-152508-8654.woff',
+      alias: '站酷快乐体',
+      id: 543,
+      value: 'zcool-kuaile-regular',
+      url: 'https://lib.baomitu.com/fonts/zcool-kuaile/zcool-kuaile-regular.woff2',
     },
     fontFamily: 'SourceHanSansSC-Regular',
     fontWeight: 'normal',
@@ -105,7 +105,7 @@ export default {
   computed: {
     ...mapGetters(['dActiveElement']),
     isDraw() {
-      return this.$route.name === 'Draw'
+      return this.$route.name === 'Draw' && fontWithDraw
     },
   },
   watch: {

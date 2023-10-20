@@ -7,15 +7,12 @@
           <p>{{ item.name }}</p>
         </li>
       </ul>
+      <a href="https://github.com/palxiao/poster-design" target="_blank" class="github"><img src="https://fe-doc.palxp.cn/images/github.svg" alt="Github" title="Github" /> 源码</a>
     </div>
     <div v-show="active" class="widget-wrap">
-      <temp-list-wrap :style="getStyle(0)" />
-      <graph-list-wrap v-show="+activeWidgetClassify === 1" :active="+activeWidgetClassify === 1" />
-      <text-list-wrap v-show="+activeWidgetClassify === 2" :active="+activeWidgetClassify === 2" />
-      <photo-list-wrap v-show="+activeWidgetClassify === 3" :active="+activeWidgetClassify === 3" />
-      <bg-img-list-wrap v-show="+activeWidgetClassify === 4" :active="+activeWidgetClassify === 4" />
-      <tools-list-wrap v-show="+activeWidgetClassify === 5" :active="+activeWidgetClassify === 5" />
-      <user-wrap v-show="+activeWidgetClassify === 6" :active="+activeWidgetClassify === 6" />
+      <keep-alive>
+        <component :is="widgetClassifyList[activeWidgetClassify].component" />
+      </keep-alive>
     </div>
     <!-- <div v-show="active" class="side-wrap"><div class="pack__up" @click="active = false">&lt;</div></div> -->
     <div v-show="active" class="side-wrap">
@@ -29,7 +26,7 @@
 <script lang="ts">
 // 组件面板
 const NAME = 'widget-panel'
-import widgetClassifyListData from '@/assets/data/widgetClassifyList'
+import widgetClassifyListData from '@/assets/data/WidgetClassifyList.ts'
 import { reactive, toRefs, onMounted, watch, nextTick, getCurrentInstance, ComponentInternalInstance } from 'vue'
 import { mapActions } from 'vuex'
 import { useRoute } from 'vue-router'
@@ -41,21 +38,15 @@ export default {
     const route = useRoute()
     const state = reactive({
       widgetClassifyList: widgetClassifyListData,
-      activeWidgetClassify: -1,
+      activeWidgetClassify: 0,
       active: true,
     })
     const clickClassify = (index: number) => {
       state.activeWidgetClassify = index
       state.active = true
     }
-    const getStyle = (index: number) => {
-      return {
-        display: state.activeWidgetClassify === index ? '' : 'none',
-      }
-    }
 
     onMounted(async () => {
-      state.activeWidgetClassify = 0
       await nextTick()
       const { koutu } = route.query
       koutu && (state.activeWidgetClassify = 5)
@@ -85,7 +76,6 @@ export default {
 
     return {
       clickClassify,
-      getStyle,
       ...toRefs(state),
     }
   },
@@ -109,6 +99,7 @@ export default {
   position: relative;
   // width: 360px;
   .widget-classify {
+    position: relative;
     border-right: 1px solid rgba(0, 0, 0, 0.07);
     background-color: #ffffff;
     height: 100%;
@@ -210,6 +201,22 @@ export default {
       color: rgba(0, 0, 0, 0.9);
       opacity: 0.9;
     }
+  }
+}
+
+.github {
+  cursor: pointer;
+  position: absolute;
+  bottom: 12px;
+  font-size: 12px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  img {
+    width: 21px;
+    height: 21px;
+    margin: 0 2px;
   }
 }
 </style>

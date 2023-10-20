@@ -2,12 +2,12 @@
  * @Author: ShawnPhang
  * @Date: 2021-12-16 16:20:16
  * @Description:
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-13 18:29:57
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-09-28 17:42:25
  */
 import mutations from './mutations'
 import actions from './actions'
-import { client } from '@gradio/client'
+import _config from '@/config'
 
 const all = {
   state: {
@@ -37,10 +37,6 @@ const all = {
     },
     fonts: (state: Type.Object) => {
       return state.fonts
-    },
-    app: async (state: Type.Object) => {
-      !state.app && (state.app = await client('https://kt.palxp.com'))
-      return state.app
     },
   },
   mutations: {

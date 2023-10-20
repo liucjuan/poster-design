@@ -2,7 +2,7 @@
  * @Author: ShawnPhang
  * @Date: 2021-09-30 14:47:22
  * @Description: 下载图片（多标签页版本，不建议在低配置服务器中使用）
- * @LastEditors: ShawnPhang <site: book.palxp.com>
+ * @LastEditors: ShawnPhang <site: m.palxp.cn>
  * @LastEditTime: 2023-07-17 18:05:31
  */
 const isDev = process.env.NODE_ENV === 'development'
@@ -55,7 +55,7 @@ const saveScreenshot = async (url: string, { path, width, height, thumbPath, siz
       // 主动模式下注入全局方法
       await page.exposeFunction('loadFinishToInject', async () => {
         clearTimeout(regulators)
-        await page.screenshot({ path }) // console.log('-> 开始截图')
+        await page.screenshot({ path, omitBackground: true })
         await page.close()
         thumbPath && compress()
         resolve()

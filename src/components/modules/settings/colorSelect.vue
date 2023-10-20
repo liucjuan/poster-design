@@ -6,7 +6,7 @@
     <div class="content">
       <el-popover placement="left-end" width="auto">
         <!-- eslint-disable-next-line vue/no-v-model-argument -->
-        <color-picker v-model:value="innerColor" :modes="['纯色']" @nativePick="dropColor" />
+        <color-picker v-model:value="innerColor" :modes="['纯色']" @blur="inputBlur" @nativePick="dropColor" />
         <template #reference>
           <div class="color__bar" :style="{ background: innerColor }"></div>
         </template>
@@ -19,8 +19,8 @@
 const NAME = 'color-select'
 import { defineComponent, toRefs, reactive, computed, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
-import { debounce } from 'throttle-debounce'
-import { toolTip } from '@/common/methods/helper'
+// import { debounce } from 'throttle-debounce'
+// import { toolTip } from '@/common/methods/helper'
 // import colorPicker from '@/utils/plugins/color-picker/index.vue'
 import colorPicker from '@palxp/color-picker'
 
@@ -90,12 +90,17 @@ export default defineComponent({
     //   state.innerColor = e + (e.length === 7 ? 'ff' : '')
     // })
 
+    const inputBlur = (color: string) => {
+      state.innerColor = color
+    }
+
     return {
       ...toRefs(state),
       // dColorHistory,
       activeChange,
       onChange,
       dropColor,
+      inputBlur,
     }
   },
 })

@@ -2,11 +2,12 @@
  * @Author: ShawnPhang
  * @Date: 2020-07-22 20:13:14
  * @Description:
- * @LastEditors: ShawnPhang <site: book.palxp.com>
- * @LastEditTime: 2023-07-17 18:03:13
+ * @LastEditors: ShawnPhang <https://m.palxp.cn>
+ * @LastEditTime: 2023-10-16 10:03:51
  */
 const { saveScreenshot } = require('../utils/download-single.ts')
-const { filePath, upperLimit } = require('../configs.ts')
+const uuid = require('../utils/uuid.ts')
+const { filePath, upperLimit, drawLink } = require('../configs.ts')
 const { queueRun, queueList } = require('../utils/node-queue.ts')
 // const path = require('path')
 const fs = require('fs')
@@ -47,6 +48,7 @@ module.exports = {
      *
      * @apiParam {String|Number} id (可选) 截图id，高优先级
      * @apiParam {String|Number} tempid (可选) 模板id，低优先级，无id时取该值
+     * @apiParam {String|Number} tempType (可选) 区分模板和组件类型，临时用
      * @apiParam {String} width (必传)视窗大小
      * @apiParam {String} height (必传)视窗大小
      * @apiParam {String} screenshot_url 可选
@@ -54,22 +56,20 @@ module.exports = {
      * @apiParam {String} size 可选, 按比例缩小到宽度
      * @apiParam {String} quality 可选, 质量
      */
-    
-    const isDev = process.env.NODE_ENV === 'development'
-    let { id, tempid, width, height, screenshot_url, type = 'file', size, quality } = req.query
-    const defaultUrl = isDev ? 'http://localhost:3000/draw' : 'https://design.palxp.com/draw'
-    const url = (screenshot_url || defaultUrl) + `${id ? '?id=' : '?tempid='}`
+    let { id, tempid, tempType, width, height, screenshot_url, type = 'file', size, quality } = req.query
+    const url = (screenshot_url || drawLink) + `${id ? '?id=' : '?tempid='}`
     id = id || tempid
     const path = filePath + `${id}-screenshot.png`
-    const thumbPath = type === 'cover' ? filePath + `${id}-cover.jpg` : null
+    const thumbPath = type === 'cover' && tempType != 1 ? filePath + `${id}-cover.jpg` : null
 
     if (id && width && height) {
       if (queueList.length > upperLimit) {
         res.json({ code: 200, msg: '服务器表示顶不住啊，等等再来吧~' })
         return
       }
-      // console.log(url + id, path, thumbPath);
-      queueRun(saveScreenshot, url + id, { width, height, path, thumbPath, size, quality })
+      const targetUrl = url + id + `${tempType?'&tempType='+tempType:''}`
+      // console.log(targetUrl, path, thumbPath);
+      queueRun(saveScreenshot, targetUrl, { width, height, path, thumbPath, size, quality })
         .then(() => {
           res.setHeader('Content-Type', 'image/jpg')
           // const stats = fs.statSync(path)
@@ -102,11 +102,11 @@ module.exports = {
      * @apiParam {Number} scale (可选) 针对移动端的设备像素比(DPR) 整型范围 1~4，默认1
      */
     let { width = 375, height = 0, url, type = 'file', size, quality, prevent = false, ua, devices, scale, wait } = req.query
-    const path = filePath + `screenshot_${new Date().getTime()}.png`
+    const path = filePath + `screenshot_${new Date().getTime()}_${uuid()}.png`
     const thumbPath = type === 'cover' ? path.replace('.png', '.jpg') : null
 
     if (url) {
-      const sign = new Date().getTime() + ''
+      const sign = `${new Date().getTime()}_${uuid(8)}`
       req._queueSign = sign
       // console.log(url + id, path, thumbPath);
       if (queueList.length > upperLimit) {
@@ -116,10 +116,12 @@ module.exports = {
       queueRun(saveScreenshot, url, { width, height, path, thumbPath, size, quality, prevent, ua, devices, scale, wait }, sign)
         .then(() => {
           if (!res.headersSent) {
-            res.setHeader('Content-Type', 'image/jpg')
+            // res.setHeader('Content-Type', 'image/jpg')
             // const stats = fs.statSync(path)
             // res.setHeader('Cache-Control', stats.size)
-            type === 'file' ? res.sendFile(path) : res.sendFile(thumbPath)
+            res.json({ code: 200, msg: '截图成功', data: { path, thumbPath } })
+          } else {
+            res.json({ code: 200, msg: 'ok' })
           }
         })
         .catch((e: any) => {

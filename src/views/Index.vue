@@ -1,5 +1,5 @@
 <template>
-  <div id="page-design-index" ref="pageDesignIndex">
+  <div id="page-design-index" ref="pageDesignIndex" class="page-design-bg-color">
     <div :style="style" class="top-nav">
       <div class="top-nav-wrap">
         <div class="top-left">
@@ -19,7 +19,9 @@
       <widget-panel></widget-panel>
       <design-board class="page-design-wrap" pageDesignCanvasId="page-design-canvas">
         <!-- 用于挡住画布溢出部分，因为使用overflow有bug -->
-        <div class="shelter" :style="{ width: (dPage.width * dZoom) / 100 + 'px', height: (dPage.height * dZoom) / 100 + 'px' }"></div>
+        <div class="shelter" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
+        <!-- 提供一个背景图层 -->
+        <div class="shelter-bg transparent-bg" :style="{ width: Math.floor((dPage.width * dZoom) / 100) + 'px', height: Math.floor((dPage.height * dZoom) / 100) + 'px' }"></div>
       </design-board>
       <style-panel></style-panel>
     </div>
@@ -40,7 +42,7 @@
 import _config from '../config'
 import { defineComponent, reactive, toRefs } from 'vue'
 import { mapActions, mapGetters } from 'vuex'
-import RightClickMenu from '@/components/business/right-click-menu/rc-menu.vue'
+import RightClickMenu from '@/components/business/right-click-menu/RcMenu.vue'
 import Moveable from '@/components/business/moveable/Moveable.vue'
 import designBoard from '@/components/modules/layout/designBoard.vue'
 import zoomControl from '@/components/modules/layout/zoomControl.vue'
@@ -88,7 +90,7 @@ export default defineComponent({
     function jump2home() {
       // const fullPath = window.location.href.split('/')
       // window.open(fullPath[0] + '//' + fullPath[2])
-      window.open('https://xp.palxp.com/')
+      window.open('https://xp.palxp.cn/')
     }
     return {
       ...toRefs(state),
@@ -135,8 +137,9 @@ export default defineComponent({
       this.isContinue = false
     },
     loadData() {
-      const { id, tempid } = this.$route.query
-      ;(this.$refs as any).options.load(id, tempid, async () => {
+      // 初始化加载页面
+      const { id, tempid, tempType } = this.$route.query
+      ;(this.$refs as any).options.load(id, tempid, tempType, async () => {
         ;(this.$refs as any).zoomControl.screenChange()
         await this.$nextTick()
         // 初始化激活的控件为page

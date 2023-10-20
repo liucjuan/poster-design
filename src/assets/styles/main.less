@@ -1,6 +1,7 @@
 @font-face {
   font-family: TitleFont;
   src: url(../fonts/xpsj.subset.woff2) format('woff2');
+  font-display: swap;
 }
 body {
   --el-color-primary: #2254f4;
@@ -14,6 +15,7 @@ body {
   -webkit-font-smoothing: antialiased;
   color: #333333;
   font-family: Hiragino Sans GB, Hiragino Sans GB W3, Arial, Microsoft Yahei, STHeiti, sans-serif;
+  overflow: hidden;
 }
 
 * {
@@ -34,12 +36,12 @@ body {
 &::-webkit-scrollbar-thumb {
   border-radius: 3px;
   background-color: #ccd4de;
-  /*box-shadow: 0 0 1px hsl(0deg 0% 100% / 50%);*/
+  // box-shadow: 0 0 1px hsl(0deg 0% 100% / 50%);
 }
 &::-webkit-scrollbar-track {
-  //background-color: #f0f1f3;
-  background-color: transparent;
-  border-radius: 3px;
+  background-color: #f0f1f3;
+  // background-color: transparent;
+  // border-radius: 3px;
 }
 
 input:-webkit-autofill,
@@ -104,5 +106,5 @@ p {
   pointer-events: none;
 }
 .hide {
-  opacity: 0;
+  opacity: 0 !important;
 }
